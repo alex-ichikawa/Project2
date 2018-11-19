@@ -99,63 +99,184 @@
 // $exampleList.on("click", ".delete", handleDeleteBtnClick);
 
 // Run apiSearch function on page load
-$(document).ready(function() {
+$(document).ready(function () {
   apiSearch();
 });
 
 // Offset for seach
 let offset = 0;
+let searchZip = 0;
+let searchName = '';
 
 // Search's Chicago's Health Inspection API
 function apiSearch() {
-  $.ajax({
-    url: "https://data.cityofchicago.org/resource/cwig-ma7x.json?",
-    type: "GET",
-    data: {
-      "$limit" : 15,
-      "$$app_token" : "6XVFBPKanuSOC8yVkH3wyE77f",
-      "$order" : "inspection_date DESC",
-      "$offset" : offset
-    }
-}).done(function(data) {
-  console.log(data);
-  // For the lenth of the data array append results to the table
-  for (let i = 0; i < data.length; i++) {
-    let newRow = $("<tr>");
-    let nameTag = $("<td>").html(data[i].dba_name);
-    newRow.append(nameTag);
+  // If a 5 digit zip is used do this
+  if (searchZip.toString().length == 5) {
+    console.log("search by zip " + searchZip);
+    $.ajax({
+      url: "https://data.cityofchicago.org/resource/cwig-ma7x.json?",
+      type: "GET",
+      data: {
+        "$limit": 15,
+        "$order": "inspection_date DESC",
+        "$offset": offset,
+        "zip": searchZip,
+        "$$app_token": "6XVFBPKanuSOC8yVkH3wyE77f"
+      }
+    }).done(function (data) {
+      console.log(data);
+      // For the lenth of the data array append results to the table
+      for (let i = 0; i < data.length; i++) {
+        let newRow = $("<tr>");
+        let nameTag = $("<td>").html(data[i].dba_name);
+        newRow.append(nameTag);
 
-    let addressTag = $("<td>").html(data[i].address);
-    newRow.append(addressTag);
+        let addressTag = $("<td>").html(data[i].address);
+        newRow.append(addressTag);
 
-    let zipTag = $("<td>").html(data[i].zip);
-    newRow.append(zipTag);
-    
-    let riskTag = $("<td>").html(data[i].risk);
-    newRow.append(riskTag);
+        let zipTag = $("<td>").html(data[i].zip);
+        newRow.append(zipTag);
 
-    let resultsTag = $("<td>").html(data[i].results);
-    newRow.append(resultsTag);
-    
-    let dateTag = $("<td>").html((data[i].inspection_date).substring(0, 10));
-    newRow.append(dateTag);
-    $("#tableSearch").append(newRow);
+        let riskTag = $("<td>").html(data[i].risk);
+        newRow.append(riskTag);
+
+        let resultsTag = $("<td>").html(data[i].results);
+        newRow.append(resultsTag);
+
+        let dateTag = $("<td>").html((data[i].inspection_date).substring(0, 10));
+        newRow.append(dateTag);
+        $("#tableSearch").append(newRow);
+      }
+    });
   }
-});
+  // else if a serach name is input
+  else if (searchName.length > 1) {
+    console.log("search by name " + searchName);
+    $.ajax({
+      url: "https://data.cityofchicago.org/resource/cwig-ma7x.json?",
+      type: "GET",
+      data: {
+        "$limit": 15,
+        "$$app_token": "6XVFBPKanuSOC8yVkH3wyE77f",
+        "$order": "inspection_date DESC",
+        "$offset": offset,
+        // change dba_name column to lower case then search for a string containing the search name
+        "$where": `lower(dba_name) like '%${searchName}%'`
+      }
+    }).done(function (data) {
+      console.log(data);
+      // For the lenth of the data array append results to the table
+      for (let i = 0; i < data.length; i++) {
+        let newRow = $("<tr>");
+        let nameTag = $("<td>").html(data[i].dba_name);
+        newRow.append(nameTag);
+
+        let addressTag = $("<td>").html(data[i].address);
+        newRow.append(addressTag);
+
+        let zipTag = $("<td>").html(data[i].zip);
+        newRow.append(zipTag);
+
+        let riskTag = $("<td>").html(data[i].risk);
+        newRow.append(riskTag);
+
+        let resultsTag = $("<td>").html(data[i].results);
+        newRow.append(resultsTag);
+
+        let dateTag = $("<td>").html((data[i].inspection_date).substring(0, 10));
+        newRow.append(dateTag);
+        $("#tableSearch").append(newRow);
+      }
+    });
+  }
+  // Basic search
+  else {
+    console.log("default search");
+    $.ajax({
+      url: "https://data.cityofchicago.org/resource/cwig-ma7x.json?",
+      type: "GET",
+      data: {
+        "$limit": 15,
+        "$$app_token": "6XVFBPKanuSOC8yVkH3wyE77f",
+        "$order": "inspection_date DESC",
+        "$offset": offset
+      }
+    }).done(function (data) {
+      console.log(data);
+      // For the lenth of the data array append results to the table
+      for (let i = 0; i < data.length; i++) {
+        let newRow = $("<tr>");
+        let nameTag = $("<td>").html(data[i].dba_name);
+        newRow.append(nameTag);
+
+        let addressTag = $("<td>").html(data[i].address);
+        newRow.append(addressTag);
+
+        let zipTag = $("<td>").html(data[i].zip);
+        newRow.append(zipTag);
+
+        let riskTag = $("<td>").html(data[i].risk);
+        newRow.append(riskTag);
+
+        let resultsTag = $("<td>").html(data[i].results);
+        newRow.append(resultsTag);
+
+        let dateTag = $("<td>").html((data[i].inspection_date).substring(0, 10));
+        newRow.append(dateTag);
+        $("#tableSearch").append(newRow);
+      }
+    });
+  }
 }
 
 // Changes the offset +15 for the apiSearch function
-$("#next").on("click", function(){
+$("#next").on("click", function () {
   offset = offset + 15;
+  // empty table
   $("#tableSearch").empty();
+  // run offset search
   apiSearch();
 });
 
 // If the offset is >0 subracts 15 from the offset for the apiSearch function
-$("#prev").on("click", function(){
+$("#prev").on("click", function () {
   if (offset > 0) {
     offset = offset - 15
+    // empty table
     $("#tableSearch").empty();
+    // run offset search
     apiSearch();
-  } 
+  }
+});
+
+// Set input for event listener
+let input = document.getElementById("search");
+
+// Listens for keyup
+input.addEventListener("keyup", function (event) {
+  event.preventDefault();
+  // If the key is the "enter key" and there is a value, continue
+  if (event.keyCode === 13 && $("#search").val().length > 0) {
+    // If the value enter is numeric go here
+    if ($.isNumeric($("#search").val()) === true) {
+      searchZip = $("#search").val().trim();
+      // empty table
+      $("#tableSearch").empty();
+      // run search
+      apiSearch();
+      // reset search zip
+      searchZip = 0;
+    }
+    // else go here
+    else {
+      // converts to lower case 
+      searchName = $("#search").val().trim().toLowerCase();
+      // empty table
+      $("#tableSearch").empty();
+      // run search
+      apiSearch();
+      // reset search name
+      searchName = "";
+    }
+  }
 });
