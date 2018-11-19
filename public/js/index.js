@@ -106,7 +106,7 @@ $(document).ready(function() {
 // Search's Chicago's Health Inspection API
 function apiSearch() {
   $.ajax({
-    url: "https://data.cityofchicago.org/resource/cwig-ma7x.json",
+    url: "https://data.cityofchicago.org/resource/cwig-ma7x.json?$order=inspection_date DESC ",
     type: "GET",
     data: {
       "$limit" : 15,
@@ -131,7 +131,9 @@ function apiSearch() {
 
     let resultsTag = $("<td>").html(data[i].results);
     newRow.append(resultsTag);
-
+    
+    let dateTag = $("<td>").html((data[i].inspection_date).substring(0, 10));
+    newRow.append(dateTag);
     $("#tableSearch").append(newRow);
   }
 });
