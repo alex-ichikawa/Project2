@@ -103,14 +103,19 @@ $(document).ready(function() {
   apiSearch();
 });
 
+// Offset for seach
+let offset = 0;
+
 // Search's Chicago's Health Inspection API
 function apiSearch() {
   $.ajax({
-    url: "https://data.cityofchicago.org/resource/cwig-ma7x.json?$order=inspection_date DESC ",
+    url: "https://data.cityofchicago.org/resource/cwig-ma7x.json?",
     type: "GET",
     data: {
       "$limit" : 15,
-      "$$app_token" : "6XVFBPKanuSOC8yVkH3wyE77f"
+      "$$app_token" : "6XVFBPKanuSOC8yVkH3wyE77f",
+      "$order" : "inspection_date DESC",
+      "$offset" : offset
     }
 }).done(function(data) {
   console.log(data);
@@ -138,3 +143,19 @@ function apiSearch() {
   }
 });
 }
+
+// Changes the offset +15 for the apiSearch function
+$("#next").on("click", function(){
+  offset = offset + 15;
+  $("#tableSearch").empty();
+  apiSearch();
+});
+
+// If the offset is >0 subracts 15 from the offset for the apiSearch function
+$("#prev").on("click", function(){
+  if (offset > 0) {
+    offset = offset - 15
+    $("#tableSearch").empty();
+    apiSearch();
+  } 
+});
