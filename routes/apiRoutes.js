@@ -126,7 +126,6 @@ app.get("/api/zip/:offset/:zip", function (req, res) {
 app.get("/api/name/:offset/:name", function (req, res) {
   let offset = req.params.offset;
   let name = req.params.name;
-  console.log("req name " + name);
   request(`https://data.cityofchicago.org/resource/cwig-ma7x.json?$limit=15&$offset=${offset}&$where=lower(dba_name) like %27%25${name}%25%27&$order=inspection_date DESC&$$app_token=${process.env.chicagoAPI}`, function (err, response, body) {
     if (!err && response.statusCode === 200) {
       console.log(body);
@@ -137,4 +136,11 @@ app.get("/api/name/:offset/:name", function (req, res) {
     }
   });
 });
+
+// Add to favorites
+
+// need to add userid
+app.post("/api/favorite", function (req, res) {
+  console.log(req.body);
+})
 }

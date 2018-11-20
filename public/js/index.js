@@ -200,10 +200,10 @@ $("#prev").on("click", function () {
   }
 });
 
-// Set input for event listener
+// Set input for event listener for search input
 let input = document.getElementById("search");
 
-// Listens for keyup
+// Listens for keyup for search input
 input.addEventListener("keyup", function (event) {
   event.preventDefault();
   // If the key is the "enter key" and there is a value, continue
@@ -244,5 +244,18 @@ input.addEventListener("keyup", function (event) {
     // run search
     apiSearch();
   }
-
 });
+
+// Add to favorites
+// need to add user id to this
+$(document).on("click", "#favorite", function(){
+  let favid = this.dataset.id;
+  addtoFav({
+    favId: favid
+  })
+  
+})
+
+function addtoFav(favData) {
+  $.post("/api/favorite", favData)
+}
