@@ -149,6 +149,7 @@ function apiSearch() {
 // For the lenth of the data array append results to the table
 function makeTable(data) {
   for (let i = 0; i < data.length; i++) {
+    // Creates table rows
     let newRow = $("<tr>");
     let nameTag = $("<td>").html(data[i].dba_name);
     newRow.append(nameTag);
@@ -167,6 +168,14 @@ function makeTable(data) {
 
     let dateTag = $("<td>").html((data[i].inspection_date).substring(0, 10));
     newRow.append(dateTag);
+
+    // Adds button to favorite
+    let favTag = $("<button>").html("Add to Favorites");
+    favTag.attr("type", "button");
+    favTag.attr("data-id", data[i].inspection_id);
+    favTag.attr("id", "favorite");
+    newRow.append(favTag);
+
     $("#tableSearch").append(newRow);
   };
 };
