@@ -42,34 +42,8 @@
                 <a class="nav-link" href="#">
                   <span data-feather="file"></span>
                   Favorites
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="shopping-cart"></span>
-                  Previous Searches
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="bar-chart-2"></span>
-                  Violations
-                </a>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="users"></span>
-                  Reviews
-                </a>
-              </li>
-              </li>
-              <!-- <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="layers"></span>
-                  Integrations
-                </a>
-              </li> -->
             </ul>
-
+{{!-- 
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
               <span>Historical Data</span>
               <!-- <a class="d-flex align-items-center text-muted" href="#">
@@ -94,7 +68,7 @@
                   <span data-feather="file-text"></span>
                   Year-To-Date
                 </a>
-              </li>
+              </li> --}}
               <!-- <li class="nav-item">
                 <a class="nav-link" href="#">
                   <span data-feather="file-text"></span>
@@ -105,7 +79,7 @@
           </div>
         </nav>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        {{!-- <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h1 class="h2"></h1>
             <div class="btn-toolbar mb-2 mb-md-0">
@@ -118,7 +92,7 @@
                 Recent Inspections
               </button>
             </div>
-          </div>
+          </div> --}}
 
           <!-- <canvas class="my-4" id="myChart" width="900" height="380"></canvas> -->
 
@@ -138,13 +112,13 @@
         src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB2T3-xpj2xv4fM4iGM0Qm00FQ1TiglG9k">
         </script>
         <script>
-        var myCenter=new google.maps.LatLng(41.8781136,-87.62979819999998);
+        var myCenter=new google.maps.LatLng({{locations.0.latitude}},{{locations.0.longitude}});
         var marker;
         function initialize()
         {
         var mapProp = {
           center:myCenter,
-          zoom:12,
+          zoom:16,
           mapTypeId:google.maps.MapTypeId.ROADMAP
           };
         var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
@@ -177,21 +151,19 @@
         </div>
       </div><!-- /.carousel -->
 
-          <h2>Results (Will vary depending on user input)</h2>
+          <h2>{{locations.0.dba_name}} - {{locations.0.address}}</h2>
           <div class="table-responsive">
             <table class="table table-striped table-sm">
               <thead>
                 <tr>
-                  <th>DBA Name</th>
-                  <th>Address</th>
+                  <th>Inspection Date</th>
                   <th>Risk</th>
                   <th>Results</th>
                   <th>Violation</th>
                 </tr>
                 {{#each locations}}
                 <tr>
-                    <td>{{dba_name}}</td>
-                    <td>{{address}}</td>
+                    <td>{{inspection_date}}</td>
                     <td>{{risk}}</td>
                     <td>{{results}}</td>
                     <td>{{violations}}</td>
@@ -202,8 +174,8 @@
               </tbody>
             </table>
           </div>
-          <button id="prev">Prev</button>
-          <button id="next">Next</button>
+          {{!-- <button id="prev">Prev</button>
+          <button id="next">Next</button> --}}
         </main>
       </div>
     </div>
@@ -255,7 +227,6 @@
     </script>
   </body>
 </html>
-
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="/js/location.js"></script>

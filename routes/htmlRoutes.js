@@ -33,6 +33,7 @@ module.exports = function(app) {
     request(`https://data.cityofchicago.org/resource/cwig-ma7x.json?dba_name=${name}&address=${address}%20&$order=inspection_date DESC&$$app_token=${process.env.chicagoAPI}`, function (err, response, body) {
       if (!err && response.statusCode === 200) {
         locationInfo = JSON.parse(body);
+        console.log(locationInfo);
         res.render("location", {
           locations: locationInfo
         });
