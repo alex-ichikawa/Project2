@@ -97,6 +97,7 @@
 // // Add event listeners to the submit and delete buttons
 // $submitBtn.on("click", handleFormSubmit);
 // $exampleList.on("click", ".delete", handleDeleteBtnClick);
+//=================================================================================================================================
 
 // Run apiSearch function on page load
 $(document).ready(function () {
@@ -113,121 +114,71 @@ function apiSearch() {
   // If a 5 digit zip is used do this
   if (searchZip.toString().length == 5) {
     console.log("search by zip " + searchZip);
-    $.ajax({
-      url: "https://data.cityofchicago.org/resource/cwig-ma7x.json?",
-      type: "GET",
-      data: {
-        "$limit": 15,
-        "$order": "inspection_date DESC",
-        "$offset": offset,
-        "zip": searchZip,
-        "$$app_token": "6XVFBPKanuSOC8yVkH3wyE77f"
-      }
+    $.ajax(`/api/zip/${offset}/${searchZip}`, {
+      type: "GET"
     }).done(function (data) {
-      console.log(data);
-      // For the lenth of the data array append results to the table
-      for (let i = 0; i < data.length; i++) {
-        let newRow = $("<tr>");
-        let nameTag = $("<td>").html(data[i].dba_name);
-        newRow.append(nameTag);
-
-        let addressTag = $("<td>").html(data[i].address);
-        newRow.append(addressTag);
-
-        let zipTag = $("<td>").html(data[i].zip);
-        newRow.append(zipTag);
-
-        let riskTag = $("<td>").html(data[i].risk);
-        newRow.append(riskTag);
-
-        let resultsTag = $("<td>").html(data[i].results);
-        newRow.append(resultsTag);
-
-        let dateTag = $("<td>").html((data[i].inspection_date).substring(0, 10));
-        newRow.append(dateTag);
-        $("#tableSearch").append(newRow);
-      }
+      // Parse data in an array
+      data = JSON.parse(data);
+      makeTable(data);
     });
   }
   // else if a serach name is input
   else if (searchName.length > 1) {
     console.log("search by name " + searchName);
-    $.ajax({
-      url: "https://data.cityofchicago.org/resource/cwig-ma7x.json?",
-      type: "GET",
-      data: {
-        "$limit": 15,
-        "$$app_token": "6XVFBPKanuSOC8yVkH3wyE77f",
-        "$order": "inspection_date DESC",
-        "$offset": offset,
-        // change dba_name column to lower case then search for a string containing the search name
-        "$where": `lower(dba_name) like '%${searchName}%'`
-      }
+    $.ajax(`/api/name/${offset}/${searchName}`, {
+      type: "GET"
     }).done(function (data) {
-      console.log(data);
-      // For the lenth of the data array append results to the table
-      for (let i = 0; i < data.length; i++) {
-        let newRow = $("<tr>");
-        let nameTag = $("<td>").html(data[i].dba_name);
-        newRow.append(nameTag);
-
-        let addressTag = $("<td>").html(data[i].address);
-        newRow.append(addressTag);
-
-        let zipTag = $("<td>").html(data[i].zip);
-        newRow.append(zipTag);
-
-        let riskTag = $("<td>").html(data[i].risk);
-        newRow.append(riskTag);
-
-        let resultsTag = $("<td>").html(data[i].results);
-        newRow.append(resultsTag);
-
-        let dateTag = $("<td>").html((data[i].inspection_date).substring(0, 10));
-        newRow.append(dateTag);
-        $("#tableSearch").append(newRow);
-      }
+      // Parse data in an array
+      data = JSON.parse(data);
+      makeTable(data);
     });
   }
   // Basic search
   else {
     console.log("default search");
-    $.ajax({
-      url: "https://data.cityofchicago.org/resource/cwig-ma7x.json?",
-      type: "GET",
-      data: {
-        "$limit": 15,
-        "$$app_token": "6XVFBPKanuSOC8yVkH3wyE77f",
-        "$order": "inspection_date DESC",
-        "$offset": offset
-      }
+    $.ajax("/api/default/" + offset, {
+      type: "GET"
     }).done(function (data) {
-      console.log(data);
-      // For the lenth of the data array append results to the table
-      for (let i = 0; i < data.length; i++) {
-        let newRow = $("<tr>");
-        let nameTag = $("<td>").html(data[i].dba_name);
-        newRow.append(nameTag);
-
-        let addressTag = $("<td>").html(data[i].address);
-        newRow.append(addressTag);
-
-        let zipTag = $("<td>").html(data[i].zip);
-        newRow.append(zipTag);
-
-        let riskTag = $("<td>").html(data[i].risk);
-        newRow.append(riskTag);
-
-        let resultsTag = $("<td>").html(data[i].results);
-        newRow.append(resultsTag);
-
-        let dateTag = $("<td>").html((data[i].inspection_date).substring(0, 10));
-        newRow.append(dateTag);
-        $("#tableSearch").append(newRow);
-      }
+      // Parse data in an array
+      data = JSON.parse(data);
+      makeTable(data);
     });
   }
 }
+
+// For the lenth of the data array append results to the table
+function makeTable(data) {
+  for (let i = 0; i < data.length; i++) {
+    // Creates table rows
+    let newRow = $("<tr>");
+    let nameTag = $("<td>").html(data[i].dba_name);
+    newRow.append(nameTag);
+
+    let addressTag = $("<td>").html(data[i].address);
+    newRow.append(addressTag);
+
+    let zipTag = $("<td>").html(data[i].zip);
+    newRow.append(zipTag);
+
+    let riskTag = $("<td>").html(data[i].risk);
+    newRow.append(riskTag);
+
+    let resultsTag = $("<td>").html(data[i].results);
+    newRow.append(resultsTag);
+
+    let dateTag = $("<td>").html((data[i].inspection_date).substring(0, 10));
+    newRow.append(dateTag);
+
+    // Adds button to favorite
+    let favTag = $("<button>").html("Add to Favorites");
+    favTag.attr("type", "button");
+    favTag.attr("data-id", data[i].inspection_id);
+    favTag.attr("id", "favorite");
+    newRow.append(favTag);
+
+    $("#tableSearch").append(newRow);
+  };
+};
 
 // Changes the offset +15 for the apiSearch function
 $("#next").on("click", function () {
@@ -249,14 +200,18 @@ $("#prev").on("click", function () {
   }
 });
 
-// Set input for event listener
+// Set input for event listener for search input
 let input = document.getElementById("search");
 
-// Listens for keyup
+// Listens for keyup for search input
 input.addEventListener("keyup", function (event) {
   event.preventDefault();
   // If the key is the "enter key" and there is a value, continue
   if (event.keyCode === 13 && $("#search").val().length > 0) {
+    // reset search name
+    searchName = "";
+    // reset search zip
+    searchZip = 0;
     // If the value enter is numeric go here
     if ($.isNumeric($("#search").val()) === true) {
       searchZip = $("#search").val().trim();
@@ -264,19 +219,43 @@ input.addEventListener("keyup", function (event) {
       $("#tableSearch").empty();
       // run search
       apiSearch();
-      // reset search zip
-      searchZip = 0;
     }
     // else go here
     else {
+      // reset search name
+      searchName = "";
+      // reset search zip
+      searchZip = 0;
       // converts to lower case 
       searchName = $("#search").val().trim().toLowerCase();
       // empty table
       $("#tableSearch").empty();
       // run search
       apiSearch();
-      // reset search name
-      searchName = "";
     }
   }
+  else if (event.keyCode === 13 && $("#search").val().length == 0) {
+    // reset search name
+    searchName = "";
+    // reset search zip
+    searchZip = 0;
+    // empty table
+    $("#tableSearch").empty();
+    // run search
+    apiSearch();
+  }
 });
+
+// Add to favorites
+// need to add user id to this
+$(document).on("click", "#favorite", function(){
+  let favid = this.dataset.id;
+  addtoFav({
+    favId: favid
+  })
+  
+})
+
+function addtoFav(favData) {
+  $.post("/api/favorite", favData)
+}
