@@ -32,7 +32,7 @@ module.exports = function (app) {
   // check if email already exists
   app.post("/api/checkemail", function (req, res) {
     let emailToCheck = req.body.email;
-    console.log(`eamil enteres ${emailToCheck}`);
+    console.log(`eamil entered ${emailToCheck}`);
     db.User.findOne({
       where: {
         email: emailToCheck
