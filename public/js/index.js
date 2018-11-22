@@ -149,9 +149,26 @@ function apiSearch() {
 // For the lenth of the data array append results to the table
 function makeTable(data) {
   for (let i = 0; i < data.length; i++) {
+    //find apostraphes in name
+    //if no appostraphes push value to array
+    //if appostraphe replace wtih %27 then push to array
+    let name = data[i].dba_name;
+    let newName = [];
+    for (let i = 0; i < name.length; i++) {
+      if (name[i] != "'"){
+        newName.push(name[i]);
+      } else if (name[i] === "'") {
+        newName.push("%27");
+      }
+      
+    }
+    // Join array with no seperator
+    let newestName = newName.join('')
     // Creates table rows
     let newRow = $("<tr>");
-    let nameTag = $("<td>").html(data[i].dba_name);
+    let nameTag = $("<td>");
+    let link = $(`<a class="linkLocation" href='/location/${newestName}/${data[i].address}'>`).html(data[i].dba_name);
+    nameTag.append(link);
     newRow.append(nameTag);
 
     let addressTag = $("<td>").html(data[i].address);
@@ -177,6 +194,7 @@ function makeTable(data) {
     newRow.append(favTag);
 
     $("#tableSearch").append(newRow);
+    newName = [];
   };
 };
 
@@ -248,12 +266,12 @@ input.addEventListener("keyup", function (event) {
 
 // Add to favorites
 // need to add user id to this
-$(document).on("click", "#favorite", function(){
+$(document).on("click", "#favorite", function () {
   let favid = this.dataset.id;
   addtoFav({
     favId: favid
   })
-  
+
 })
 
 function addtoFav(favData) {

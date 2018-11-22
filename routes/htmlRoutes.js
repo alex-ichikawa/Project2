@@ -1,3 +1,5 @@
+require("dotenv").config();
+let request = require("request");
 var db = require("../models");
 
 module.exports = function(app) {
@@ -21,6 +23,24 @@ module.exports = function(app) {
 
   app.get("/home", function(req, res) {
     res.render("home", {
+    });
+  });
+
+  app.get("/location/:name/:address", function(req, res){
+    let name = req.params.name;
+    let address = req.params.address;
+    // let longitude = req.params.longitude;
+    request(`https://data.cityofchicago.org/resource/cwig-ma7x.json?dba_name=${name}&address=${address}%20&$order=inspection_date DESC&$$app_token=${process.env.chicagoAPI}`, function (err, response, body) {
+      if (!err && response.statusCode === 200) {
+        locationInfo = JSON.parse(body);
+        console.log(locationInfo);
+        res.render("location", {
+          locations: locationInfo
+        });
+      }
+      else {
+        console.log(err);
+      }
     });
   });
 
