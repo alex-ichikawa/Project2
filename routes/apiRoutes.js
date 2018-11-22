@@ -32,7 +32,7 @@ module.exports = function (app) {
   // check if email already exists
   app.post("/api/checkemail", function (req, res) {
     let emailToCheck = req.body.email;
-    console.log(`eamil enteres ${emailToCheck}`);
+    console.log(`eamil entered ${emailToCheck}`);
     db.User.findOne({
       where: {
         email: emailToCheck
@@ -93,7 +93,7 @@ module.exports = function (app) {
 
   });
 
-// API Routes for Chicago health database =============================================================
+// Main Page - API Routes for Chicago health database =============================================================
 
 // Default route for no zip or name input
   app.get("/api/default/:offset", function (req, res) {
@@ -142,5 +142,8 @@ app.get("/api/name/:offset/:name", function (req, res) {
 // need to add userid
 app.post("/api/favorite", function (req, res) {
   console.log(req.body);
-})
+});
+
+// Locations Page ==============================================================================
+
 }

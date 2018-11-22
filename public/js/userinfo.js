@@ -1,7 +1,16 @@
 
 $(document).on("click", "#signmeup", function(event) {
     event.preventDefault();
-    $("#msg").text("");
+    
+    if (!$("#inputEmail").val().trim() || !$("#inputPassword").val().trim() || !$("#firstName").val().trim() || !$("#lastName").val().trim()) {
+        
+        swal({
+            type: 'error',
+            title: 'Oops...',
+            text: 'Complete all fields',
+          });
+          return;
+    }   
     var emailInput = $("#inputEmail").val().trim();
     var pass = $("#inputPassword").val().trim();
     console.log(`password etred ${pass}`)
@@ -23,10 +32,16 @@ $(document).on("click", "#signmeup", function(event) {
         data: newUSer
     })
     .then(function(response){
-        console.log(`response is ${response}`);
+        // console.log(`response is ${response.email}`);
         if(response) {
             
-$("#msg").append("Email already exists! Enter a different email or login");
+            swal({
+                title: 'Email already exists! Login or enter a different email',
+                animation: true,
+                customClass: 'animated tada'
+                
+                
+              })
         }
 
         else    {
@@ -39,7 +54,8 @@ $("#msg").append("Email already exists! Enter a different email or login");
                     data: newUSer
                   }).then(function(){
                       console.log("Added new user");
-
+                    let baseurl = window.location.origin;
+                     window.location.replace(`${baseurl}/signin`);
                       
                   });
             }
@@ -78,6 +94,15 @@ $(document).on("click", "#login", function(event) {
         }
         else {
             $("#errMsg").append(`Success! Welcome ${response.firstName} ${response.lastName}`);   
+            currentUser = {
+                id: response.id,
+                firstName: response.firstName,
+                lastName: response.lastName
+            }
+
+            let baseurl = window.location.origin;
+            window.location.replace(`${baseurl}/home/${response.id}`);
+            
              }
 
     });
