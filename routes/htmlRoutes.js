@@ -21,8 +21,10 @@ module.exports = function(app) {
   });
   // });
 
-  app.get("/home", function(req, res) {
+  app.get("/home/:id", function(req, res) {
+    console.log(`user logged in ${req.firstName} ${req.lastName}`);
     res.render("home", {
+      
     });
   });
 
