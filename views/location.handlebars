@@ -35,11 +35,11 @@
               <li class="nav-item">
                 <a class="nav-link active" href="#">
                   <span data-feather="home"></span>
-                  Hello (User Name)! <span class="sr-only">(current)</span>
+                  Hello {{user.firstName}}! <span class="sr-only">(current)</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/favorites/{{user.id}}/{{user.firstName}}">
                   <span data-feather="file"></span>
                   Favorites
                 </a>
