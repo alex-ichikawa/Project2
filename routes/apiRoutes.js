@@ -3,31 +3,9 @@ let request = require("request");
 var db = require("../models");
 var bcrypt = require("bcrypt-nodejs");
 
-// Create a password salt
-// var salt = bcrypt.genSaltSync(10);
+
 
 module.exports = function (app) {
-  // Get all examples
-  app.get("/api/examples", function (req, res) {
-    db.Example.findAll({}).then(function (dbExamples) {
-      res.json(dbExamples);
-    });
-  });
-
-  // Create a new example
-  app.post("/api/examples", function (req, res) {
-    db.Example.create(req.body).then(function (dbExample) {
-      res.json(dbExample);
-    });
-  });
-
-  // Delete an example by id
-  app.delete("/api/examples/:id", function (req, res) {
-    db.Example.destroy({ where: { id: req.params.id } }).then(function (dbExample) {
-      res.json(dbExample);
-    });
-  });
-
   // Added by Navreet --------------------------------------------------------------------------------------------------------
   // check if email already exists
   app.post("/api/checkemail", function (req, res) {
@@ -77,8 +55,6 @@ module.exports = function (app) {
       if (match) {
         if (bcrypt.compareSync(passwordToCheck, match.password)) {
 
-          // res.json(match.firstName);
-          // console.log(`name is ${match.firstName}`);
           res.send(match);
         }
         else {
@@ -157,6 +133,16 @@ app.post("/api/:id/favorite", function (req, res) {
   })
 });
 
-// Locations Page ==============================================================================
+// Favorites Page ==============================================================================
 
+app.delete("/api/delete/:userId/:inspectionId", function(req, res) {
+  let userNum = req.params.userId;
+  let inspectionId = req.params.inspectionId;
+  db.Favorite.destroy({
+    where: {
+      userNum: userNum,
+      favId: inspectionId
+    }
+  });
+});
 }
