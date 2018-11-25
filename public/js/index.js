@@ -154,24 +154,30 @@ function makeTable(data) {
     //find apostraphes in name
     //if no appostraphes push value to array
     //if appostraphe replace wtih %27 then push to array
-    let name = data[i].dba_name;
-    let newName = [];
-    for (let i = 0; i < name.length; i++) {
-      if (name[i] != "'"){
-        newName.push(name[i]);
-      } else if (name[i] === "'") {
-        newName.push("%27");
-      }
+
+    // let name = data[i].dba_name;
+    // let newName = [];
+    // for (let i = 0; i < name.length; i++) {
+    //   if (name[i] != "'"){
+    //     newName.push(name[i]);
+    //   } else if (name[i] === "'") {
+    //     newName.push("%27");
+    //   }
       
-    }
+    // }
+    regexStep1 = data[i].dba_name.replace(/'/g, '%27');
+    regexStep2 = regexStep1.replace(/#/g, '%23');
+    regexStep3 = regexStep2.replace(/&/g, '%26');
+    regexStep4 = regexStep3.replace(/ /g, '%20');
+    console.log("regex test " + regexStep4);
     // Join array with no seperator
-    let newestName = newName.join('')
+    // let newestName = newName.join('')
     // Grab user id
     let id = document.getElementById("id").innerHTML;
     // Creates table rows
     let newRow = $("<tr>");
     let nameTag = $("<td>");
-    let link = $(`<a class="linkLocation" href='/location/${id}/${newestName}/${data[i].address}'>`).html(data[i].dba_name);
+    let link = $(`<a class="linkLocation" href='/location/${id}/${regexStep4}/${data[i].address}'>`).html(data[i].dba_name);
     nameTag.append(link);
     newRow.append(nameTag);
 

@@ -31,10 +31,15 @@ module.exports = function (app) {
   });
 
   app.get("/location/:id/:name/:address", function (req, res) {
-    let name = req.params.name;
+    regexStep1 = req.params.name.replace(/'/g, '%27');
+    regexStep2 = regexStep1.replace(/#/g, '%23');
+    regexStep3 = regexStep2.replace(/&/g, '%26');
+    regexStep4 = regexStep3.replace(/ /g, '%20');
+    let name = regexStep4;
     let address = req.params.address;
     let id = req.params.id;
-    // let longitude = req.params.longitude;
+    console.log(name);
+    console.log(address);
     request(`https://data.cityofchicago.org/resource/cwig-ma7x.json?dba_name=${name}&address=${address}%20&$order=inspection_date DESC&$$app_token=${process.env.chicagoAPI}`, function (err, response, body) {
       if (!err && response.statusCode === 200) {
         locationInfo = JSON.parse(body);
