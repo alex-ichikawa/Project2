@@ -140,8 +140,21 @@ app.get("/api/name/:offset/:name", function (req, res) {
 // Add to favorites
 
 // need to add userid
-app.post("/api/favorite", function (req, res) {
-  console.log(req.body);
+app.post("/api/:id/favorite", function (req, res) {
+  let id = req.params.id;
+  db.Favorite.create({
+    userNum: id,
+    favId: req.body.favId,
+    favName: req.body.favName,
+    favAddress: req.body.favAddress,
+    favRisk: req.body.favRisk,
+    favResult: req.body.favResult,
+    favViolations: req.body.favViolations,
+    favDate: req.body.favDate,
+    UserId: id
+  }).then(function(result) {
+    res.json(result);
+  })
 });
 
 // Locations Page ==============================================================================

@@ -84,7 +84,7 @@
 }
 
 body {
-  background-image: url("clean-plate-logo.jpg");
+  background-image: url("../images/clean-plate-logo.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed; 
   margin: auto;

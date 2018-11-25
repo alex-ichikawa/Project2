@@ -101,7 +101,7 @@ $(document).on("click", "#login", function(event) {
             }
 
             let baseurl = window.location.origin;
-            window.location.replace(`${baseurl}/home/${response.id}`);
+            window.location.replace(`${baseurl}/home/${response.id}/${response.firstName}`);
             
              }
 

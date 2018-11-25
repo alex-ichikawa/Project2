@@ -109,8 +109,10 @@ let offset = 0;
 let searchZip = 0;
 let searchName = '';
 
+
 // Search's Chicago's Health Inspection API
 function apiSearch() {
+
   // If a 5 digit zip is used do this
   if (searchZip.toString().length == 5) {
     console.log("search by zip " + searchZip);
@@ -152,22 +154,30 @@ function makeTable(data) {
     //find apostraphes in name
     //if no appostraphes push value to array
     //if appostraphe replace wtih %27 then push to array
-    let name = data[i].dba_name;
-    let newName = [];
-    for (let i = 0; i < name.length; i++) {
-      if (name[i] != "'"){
-        newName.push(name[i]);
-      } else if (name[i] === "'") {
-        newName.push("%27");
-      }
+
+    // let name = data[i].dba_name;
+    // let newName = [];
+    // for (let i = 0; i < name.length; i++) {
+    //   if (name[i] != "'"){
+    //     newName.push(name[i]);
+    //   } else if (name[i] === "'") {
+    //     newName.push("%27");
+    //   }
       
-    }
+    // }
+    regexStep1 = data[i].dba_name.replace(/'/g, '%27');
+    regexStep2 = regexStep1.replace(/#/g, '%23');
+    regexStep3 = regexStep2.replace(/&/g, '%26');
+    regexStep4 = regexStep3.replace(/ /g, '%20');
+    console.log("regex test " + regexStep4);
     // Join array with no seperator
-    let newestName = newName.join('')
+    // let newestName = newName.join('')
+    // Grab user id
+    let id = document.getElementById("id").innerHTML;
     // Creates table rows
     let newRow = $("<tr>");
     let nameTag = $("<td>");
-    let link = $(`<a class="linkLocation" href='/location/${newestName}/${data[i].address}'>`).html(data[i].dba_name);
+    let link = $(`<a class="linkLocation" href='/location/${id}/${regexStep4}/${data[i].address}'>`).html(data[i].dba_name);
     nameTag.append(link);
     newRow.append(nameTag);
 
@@ -190,6 +200,12 @@ function makeTable(data) {
     let favTag = $("<button>").html("Add to Favorites");
     favTag.attr("type", "button");
     favTag.attr("data-id", data[i].inspection_id);
+    favTag.attr("data-name", data[i].dba_name);
+    favTag.attr("data-address", data[i].address);
+    favTag.attr("data-risk", data[i].risk);
+    favTag.attr("data-result", data[i].results);
+    favTag.attr("data-violations", data[i].violations);
+    favTag.attr("data-date", (data[i].inspection_date).substring(0, 10));
     favTag.attr("id", "favorite");
     newRow.append(favTag);
 
@@ -268,12 +284,25 @@ input.addEventListener("keyup", function (event) {
 // need to add user id to this
 $(document).on("click", "#favorite", function () {
   let favid = this.dataset.id;
+  let name = this.dataset.name;
+  let address = this.dataset.address;
+  let risk = this.dataset.risk;
+  let result = this.dataset.result;
+  let violations = this.dataset.violations;
+  let date = this.dataset.date;
   addtoFav({
-    favId: favid
+    favId: favid,
+    favName: name,
+    favAddress: address,
+    favRisk: risk,
+    favResult: result,
+    favViolations: violations,
+    favDate: date,
   })
 
 })
 
 function addtoFav(favData) {
-  $.post("/api/favorite", favData)
+  let id = document.getElementById("id").innerHTML;
+  $.post(`/api/${id}/favorite`, favData)
 }
