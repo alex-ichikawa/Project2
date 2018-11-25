@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     favViolations: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     favDate: {
       type: DataTypes.STRING,
