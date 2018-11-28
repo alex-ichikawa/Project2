@@ -28,10 +28,7 @@ module.exports = function (app) {
       res.json(dbExample);
     });
   });
-  // req.user 
 
-
-  /*module.exports = function (app) {*/
 
   // Added by Navreet --------------------------------------------------------------------------------------------------------
   // check if email already exists
@@ -68,10 +65,9 @@ module.exports = function (app) {
 
 
     passport.authenticate('login', (err, user, info) => {
-      // if(err){ return next(err)}
+
       if (!user) { return res.json({ user: false }) }
-      // req.login(user, function(err){
-      //     if(err) {return next(err)}
+
       else {
         return res.json({ user: user })
       }
