@@ -4,8 +4,7 @@ var db = require("../models");
 var bcrypt = require("bcrypt-nodejs");
 var passport = require('passport');
 
-// Create a password salt
-// var salt = bcrypt.genSaltSync(10);
+
 
 module.exports = function (app) {
   // Get all examples
@@ -30,6 +29,10 @@ module.exports = function (app) {
     });
   });
 // req.user 
+
+
+/*module.exports = function (app) {*/
+
   // Added by Navreet --------------------------------------------------------------------------------------------------------
   // check if email already exists
   app.post("/api/checkemail", function (req, res) {
@@ -60,6 +63,7 @@ module.exports = function (app) {
     res.send('logged out');
   });
   // check user credentials and authenticate
+
   app.post("/api/authenticate", function (req, res, next) {
 
   
@@ -70,6 +74,30 @@ module.exports = function (app) {
       //     if(err) {return next(err)}
       else {
           return res.json({user: user})
+
+ /* app.post("/api/authenticate", function (req, res) {
+
+    let passwordToCheck = req.body.password;
+
+    let emailToCheck = req.body.email;
+
+    db.User.findOne({
+      where: {
+        email: emailToCheck
+
+      }
+    }).then(function (match) {
+
+      if (match) {
+        if (bcrypt.compareSync(passwordToCheck, match.password)) {
+
+          res.send(match);
+        }
+        else {
+          res.send(null);
+
+        }*/
+
       }
       }) (req, res, next)
   
@@ -78,7 +106,7 @@ module.exports = function (app) {
 
   });
 
-// API Routes for Chicago health database =============================================================
+// Main Page - API Routes for Chicago health database =============================================================
 
 // Default route for no zip or name input
   app.get("/api/default/:offset", function (req, res) {
@@ -125,7 +153,33 @@ app.get("/api/name/:offset/:name", function (req, res) {
 // Add to favorites
 
 // need to add userid
-app.post("/api/favorite", function (req, res) {
-  console.log(req.body);
-})
+app.post("/api/:id/favorite", function (req, res) {
+  let id = req.params.id;
+  db.Favorite.create({
+    userNum: id,
+    favId: req.body.favId,
+    favName: req.body.favName,
+    favAddress: req.body.favAddress,
+    favRisk: req.body.favRisk,
+    favResult: req.body.favResult,
+    favViolations: req.body.favViolations,
+    favDate: req.body.favDate,
+    UserId: id
+  }).then(function(result) {
+    res.json(result);
+  })
+});
+
+// Favorites Page ==============================================================================
+
+app.delete("/api/delete/:userId/:inspectionId", function(req, res) {
+  let userNum = req.params.userId;
+  let inspectionId = req.params.inspectionId;
+  db.Favorite.destroy({
+    where: {
+      userNum: userNum,
+      favId: inspectionId
+    }
+  });
+});
 }

@@ -116,9 +116,11 @@ $(document).on("click", "#login", function(event) {
                 //  console.log("------------------", response);
 
             let baseurl = window.location.origin;
+
             
             window.location.replace(`${baseurl}/home/${currentUser.id}/${currentUser.firstName}`);
            
+
             
              }
 

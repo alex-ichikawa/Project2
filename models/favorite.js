@@ -7,7 +7,31 @@ module.exports = function(sequelize, DataTypes) {
     favId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    }
+    },
+    favName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    favAddress: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    favRisk: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    favResult: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    favViolations: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    favDate: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   });
 
   Favorite.associate = function(models) {
