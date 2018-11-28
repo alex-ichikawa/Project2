@@ -1,7 +1,7 @@
 
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Clean Plates Chicago</a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/home/{{user.id}}/{{user.firstName}}">Clean Plates Chicago</a>
       <input class="form-control form-control-dark w-100" type="text" placeholder="Search by Name and/or Zip Code " aria-label="Search" id="search">
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
@@ -51,7 +51,7 @@
         <div class="carousel-inner">
           <div class="item active">
                 <script 
-                  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2T3-xpj2xv4fM4iGM0Qm00FQ1TiglG9k&callback=initMap">
+                  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2T3-xpj2xv4fM4iGM0Qm00FQ1TiglG9k">
                 </script>
         <script>
         var myCenter=new google.maps.LatLng({{locations.0.latitude}},{{locations.0.longitude}});
