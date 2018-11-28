@@ -86,8 +86,9 @@ module.exports = function (app) {
 
   // Default route for no zip or name input
   app.get("/api/default/:offset", function (req, res) {
+    console.log("calling default api");
     let offset = req.params.offset;
-    request(`https://data.cityofchicago.org/resource/cwig-ma7x.json?$limit=15&$offset=${offset}&$order=inspection_date DESC&$$app_token=${process.env.chicagoAPI}`, function (err, response, body) {
+    request(`https://data.cityofchicago.org/resource/cwig-ma7x.json?$limit=15&$offset=${offset}&$order=inspection_date%20DESC&$$app_token=${process.env.chicagoAPI}`, function (err, response, body) {
       if (!err && response.statusCode === 200) {
         res.json(body);
       }
