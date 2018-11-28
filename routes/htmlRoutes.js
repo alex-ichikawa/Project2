@@ -56,11 +56,8 @@ module.exports = function (app) {
 
   app.get("/favorites/:id/:firstName", function (req, res) {
     let  id = req.params.id;
-    console.log("fav userid " + id);
     db.Favorite.findAll({ where: { userNum: req.params.id } }).then(function (favs) {
-      console.log("step 1");
       db.User.findOne({ where: { id: id } }).then(function (user) {
-        console.log("step 2");
         res.render("favorites", {
           favorites: favs,
           user: user
