@@ -6,6 +6,7 @@ var passportSetup = require("./config/passport-setup");
 var cookieSession = require("cookie-session");
 var passport = require('passport');
 var db = require("./models");
+let path = require("path");
 
 var app = express();
 var PORT = process.env.PORT || 3000;
@@ -44,6 +45,9 @@ if (process.env.NODE_ENV === "test") {
 else if (process.env.NODE_ENV === 'production'){
 	app.use(express.static('client/build'));
 }
+app.get('*', (request, response) => {
+  response.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
 
 // Starting the server, syncing our models ------------------------------------/
 db.sequelize.sync(syncOptions).then(function() {
