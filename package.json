@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Project 2 Starter",
   "main": "server.js",
+  "engines": {
+    "node": "8.11.1",
+    "npm": "5.6.0"
+  },
   "scripts": {
     "start": "node server.js",
     "lint": "eslint **/*.js --quiet",
