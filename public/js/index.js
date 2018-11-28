@@ -49,6 +49,8 @@ function apiSearch() {
 
 // For the lenth of the data array append results to the table
 function makeTable(data) {
+  console.log("making table");
+  console.log("table data " + data);
   for (let i = 0; i < data.length; i++) {
     regexStep1 = data[i].dba_name.replace(/'/g, '%27');
     regexStep2 = regexStep1.replace(/#/g, '%23');
