@@ -19,11 +19,10 @@ module.exports = function(app) {
   });
   // });
 
-  app.get("/home/:id", function(req, res) {
-    console.log(`user logged in ${req.firstName} ${req.lastName}`);
-    res.render("home", {
-      
-    });
+  app.get("/home/:id/:firstName", function(req, res) {
+      // console.log(req, "this should be the user");
+    
+    res.render("home",{id: req.params.id, firstName:req.params.firstName});
   });
 
   // Load example page and pass in an example by id
