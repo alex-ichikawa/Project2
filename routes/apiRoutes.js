@@ -2,10 +2,37 @@ require("dotenv").config();
 let request = require("request");
 var db = require("../models");
 var bcrypt = require("bcrypt-nodejs");
+var passport = require('passport');
 
 
 
 module.exports = function (app) {
+  // Get all examples
+  app.get("/api/examples", function (req, res) {
+    db.Example.findAll({}).then(function (dbExamples) {
+      res.json(dbExamples);
+    });
+  });
+
+  // Create a new example
+  app.post("/api/examples", function (req, res) {
+    db.Example.create(req.body).then(function (dbExample) {
+      res.json(dbExample);
+    });
+  });
+
+  // Delete an example by id
+  app.delete("/api/examples/:id", function (req, res) {
+    
+    db.Example.destroy({ where: { id: req.params.id } }).then(function (dbExample) {
+      res.json(dbExample);
+    });
+  });
+// req.user 
+
+
+/*module.exports = function (app) {*/
+
   // Added by Navreet --------------------------------------------------------------------------------------------------------
   // check if email already exists
   app.post("/api/checkemail", function (req, res) {
@@ -21,25 +48,34 @@ module.exports = function (app) {
     });
   });
   // create new user
-  app.post("/api/createuser", function (req, res) {
-    console.log(`user enteres for password ${req.body.password} and ${req.body.email}`);
-    var passwordToSave = bcrypt.hashSync(req.body.password);
-    console.log(passwordToSave);
-    db.User.create({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: passwordToSave
-
-    })
-      .then(function (result) {
-        res.json(result);
-
-      });
+  app.post("/api/createuser", function (req, res, next) {
+      passport.authenticate('signup', (err, user, info)=>{
+        if(err){ return next(err)}
+        if(!user){ return res.json({user: false})}
+        req.logIn(user, function(err){
+            if(err) {return next(err)}
+            return res.json({user: true})
+        })
+      })(req, res, next)
   });
-
+  app.get('/api/logout', function(req, res){
+    req.logout();
+    res.send('logged out');
+  });
   // check user credentials and authenticate
-  app.post("/api/authenticate", function (req, res) {
+
+  app.post("/api/authenticate", function (req, res, next) {
+
+  
+    passport.authenticate('login', (err, user, info)=>{
+      // if(err){ return next(err)}
+      if(!user){ return res.json({user: false})}
+      // req.login(user, function(err){
+      //     if(err) {return next(err)}
+      else {
+          return res.json({user: user})
+
+ /* app.post("/api/authenticate", function (req, res) {
 
     let passwordToCheck = req.body.password;
 
@@ -60,10 +96,11 @@ module.exports = function (app) {
         else {
           res.send(null);
 
-        }
-      }
+        }*/
 
-    });
+      }
+      }) (req, res, next)
+  
 
 
 

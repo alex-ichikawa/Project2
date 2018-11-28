@@ -68,7 +68,8 @@ $(document).on("click", "#signmeup", function(event) {
 //validating user login
 $(document).on("click", "#login", function(event) {
     event.preventDefault();
-    $("#errMsg").text("")
+    // $("#errMsg").text("")
+    console.log("In login ______-------")
     let emailCheck = $("#inputEmail").val().trim();
     let passwordCheck = $("#inputPassword").val().trim();
    
@@ -86,24 +87,57 @@ $(document).on("click", "#login", function(event) {
     })
     .then(function(response){
         console.log(`response is ${response}`);
-        if (!response) {
-            $("#errMsg").append("Incorrect user name or password. Try again!");
-           
-        //    having troublr 
-            // window.location.pathname= "/";
-        }
-        else {
-            $("#errMsg").append(`Success! Welcome ${response.firstName} ${response.lastName}`);   
-            currentUser = {
-                id: response.id,
-                firstName: response.firstName,
-                lastName: response.lastName
+        if (response.user == false) {
+            
+                swal({
+                    title: 'Incorrect username or password',
+                    animation: true,
+                    customClass: 'animated tada'
+                    
+                    
+                  })
             }
+           
+      
+        
+        else {
+            swal({
+                title: 'Login successful',
+                animation: true,
+                customClass: 'animated tada'
+                
+                
+              })
+                 currentUser = {
+                    id: response.user.id,
+                    firstName: response.user.firstName,
+                    lastName: response.user.lastName
+                 }
+                //  console.log("------------------", response);
 
             let baseurl = window.location.origin;
-            window.location.replace(`${baseurl}/home/${response.id}/${response.firstName}`);
+
+            
+            window.location.replace(`${baseurl}/home/${currentUser.id}/${currentUser.firstName}`);
+           
+
             
              }
 
+    });
+});
+
+$(document).on("click", "#signout", function(event) {
+    event.preventDefault();
+
+    $.ajax({
+        method: "GET",
+        url: "/api/logout",
+        
+    })
+    .then(function(response){
+    // alert("signed out");
+        window.location = '/';
+        console.log(response);
     });
 });

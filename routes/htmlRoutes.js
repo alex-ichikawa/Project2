@@ -21,6 +21,11 @@ module.exports = function (app) {
   });
   // });
 
+ /* app.get("/home/:id/:firstName", function(req, res) {
+      // console.log(req, "this should be the user");
+    
+    res.render("home",{id: req.params.id, firstName:req.params.firstName});*/
+
   app.get("/home/:id/:firstName", function (req, res) {
     let id = req.params.id;
     db.User.findOne({ where: { id: id } }).then(function (user) {
@@ -54,7 +59,8 @@ module.exports = function (app) {
       else {
         console.log(err);
       }
-    });
+    }); 
+
   });
 
   // Load example page and pass in an example by id
